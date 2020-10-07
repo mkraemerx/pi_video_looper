@@ -16,6 +16,7 @@ class OMXPlayer:
         background.
         """
         self._process = None
+        self._process2 = None
         self._temp_directory = None
         self._load_config(config)
 
@@ -57,8 +58,12 @@ class OMXPlayer:
         self.stop(3)  # Up to 3 second delay to let the old player stop.
         # Assemble list of arguments.
         args = ['omxplayer']
+        # leave sound on first player
         args.extend(['-o', self._sound])  # Add sound arguments.
+        # remove sound on player #1
+        args.extend(['-n', '-1'])
         args.extend(self._extra_args)     # Add extra arguments from config.
+
         if vol is not 0:
             args.extend(['--vol', str(vol)])
         if loop is None:
@@ -76,6 +81,32 @@ class OMXPlayer:
         self._process = subprocess.Popen(args,
                                          stdout=open(os.devnull, 'wb'),
                                          close_fds=True)
+
+        args = ['omxplayer']
+        args.extend(['-o', self._sound])  # Add sound arguments.
+        # add rotation
+        args.extend(['--display', '7'])
+        # add display selection
+        args.extend(['--orientation', '180'])
+        args.extend(self._extra_args)     # Add extra arguments from config.
+        if vol is not 0:
+            args.extend(['--vol', str(vol)])
+        if loop is None:
+            loop = movie.repeats
+        if loop <= -1:
+            args.append('--loop')  # Add loop parameter if necessary.
+        if self._show_titles and movie.title:
+            srt_path = os.path.join(self._get_temp_directory(), 'video_looper.srt')
+            with open(srt_path, 'w') as f:
+                f.write(self._subtitle_header)
+                f.write(movie.title)
+            args.extend(['--subtitles', srt_path])
+        args.append(movie.filename)       # Add movie file path.
+        self._process2 = subprocess.Popen(args,
+                                         stdout=open(os.devnull, 'wb'),
+                                         close_fds=True)
+
+
 
     def is_playing(self):
         """Return true if the video player is running, false otherwise."""
@@ -102,6 +133,7 @@ class OMXPlayer:
             time.sleep(0)
         # Let the process be garbage collected.
         self._process = None
+        self._process2 = None
 
     @staticmethod
     def can_loop_count():

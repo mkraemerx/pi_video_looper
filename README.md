@@ -4,6 +4,9 @@ This fork modifies the omxplayer so that it runs 2 players for the 2 HDMI output
  - sound of display 2 is directed to local output
  - display 2 is rotated by 180°
 
+ I basically tried to achieve the effect of this commandline in a more controllable and reliable fashion
+ `omxplayer --no-keys -n -1 --loop videos/elefant.mp4 & omxplayer --loop --display 7 --orientation 180 -o local videos/elefant.mp4`
+
  Just check the changes, if you have different requirements you can for sure adapt it quite easily.
 
 # pi_video_looper

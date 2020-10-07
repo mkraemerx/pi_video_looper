@@ -1,3 +1,11 @@
+# A very special fork
+This fork modifies the omxplayer so that it runs 2 players for the 2 HDMI outputs of raspi 4. Because I needed this urgently, it's more a hack and includes fixed settings so that:
+ - display 1 should not play sound
+ - sound of display 2 is directed to local output
+ - display 2 is rotated by 180°
+
+ Just check the changes, if you have different requirements you can for sure adapt it quite easily.
+
 # pi_video_looper
 An application to turn your Raspberry Pi into a dedicated looping video playback device.
 Can be used in art installations, fairs, theatre, events, infoscreens, advertisment etc...
